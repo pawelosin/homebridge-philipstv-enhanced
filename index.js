@@ -933,7 +933,7 @@ HttpStatusAccessory.prototype = {
     },
 
     getActiveIdentifier: function(callback) {
-        callback(null, 0);
+        callback(null, 1);
     },
 
     setActiveIdentifier: function(identifier, callback){
@@ -1034,7 +1034,7 @@ HttpStatusAccessory.prototype = {
           );
         this.tvService
           .getCharacteristic(Characteristic.Active)
-          .on('set', this.setPowerState.bind(this))
+          .on('set', this.setBrightnessState.bind(this))
           .on('get', this.getPowerState.bind(this));
       
         this.tvService.setCharacteristic(Characteristic.ActiveIdentifier, 0);
