@@ -6,6 +6,7 @@ function MenuItem(accessory, log, nodeid, is_polling) {
     this.nodeid = nodeid;
     this.is_polling = is_polling;
     this.state = 0;
+    return this;
 }
 
 MenuItem.prototype = {

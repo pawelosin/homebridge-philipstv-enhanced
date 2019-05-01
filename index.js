@@ -92,6 +92,7 @@ function HttpStatusAccessory(log, config) {
 
     // AMBILIGHT
     this.ambilight_brightness = MenuItem(this, this.log, 2131230842, false);
+    this.log("Setting up brightness: ", this.ambilight_brightness);
 
     this.ambilight_status_url = this.protocol + "://" + this.ip_address + ":" + this.portno + "/" + this.api_version + "/menuitems/settings/current";
 	this.ambilight_brightness_body = JSON.stringify({"nodes":[{"nodeid":2131230769}]});
@@ -1023,7 +1024,9 @@ HttpStatusAccessory.prototype = {
         	this.ambilightService
             	.getCharacteristic(Characteristic.Brightness)
             	.on('get', this.ambilight_brightness.getValue.bind(this))
-            	.on('set', this.ambilight_brightness.setValue.bind(this));
+                .on('set', this.ambilight_brightness.setValue.bind(this));
+                
+            this.services.push(this.ambilightService);
 
             return this.services;
         } else {
