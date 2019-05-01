@@ -941,7 +941,7 @@ HttpStatusAccessory.prototype = {
     },
 
     sendKey: function(key, callback) {
-        body = JSON.stringify({"key": "Source"});
+        body = JSON.stringify({"key": key});
         this.pathRequest("/input/key", body, "POST", function(error, response, responseBody) {
             callback(null);
         });
