@@ -1033,10 +1033,10 @@ HttpStatusAccessory.prototype = {
         if (this.has_ambilight) {
             // AMBILIGHT
             this.ambilightService = new Service.Lightbulb(this.name + " Brightness", '0e');
-            /*this.ambilightService
+            this.ambilightService
                 .getCharacteristic(Characteristic.On)
                 .on('get', this.getBrightnessState.bind(this))
-                .on('set', this.setBrightnessState.bind(this));*/
+                .on('set', this.setBrightnessState.bind(this));
 
         	this.ambilightService
             	.getCharacteristic(Characteristic.Brightness)
