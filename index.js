@@ -3,6 +3,7 @@ var Characteristic;
 var request = require("request");
 var pollingtoevent = require('polling-to-event');
 var wol = require('wake_on_lan');
+var MenuItem = require('./menuitem');
 
 module.exports = function(homebridge) {
     Service = homebridge.hap.Service;
@@ -66,6 +67,8 @@ function HttpStatusAccessory(log, config) {
 
     // Define URL & JSON Payload for Actions
 
+    this.base_url = this.protocol + "://" + this.ip_address + ":" + this.portno + "/" + this.api_version;
+
     // POWER
     this.power_url = this.protocol + "://" + this.ip_address + ":" + this.portno + "/" + this.api_version + "/powerstate";
     this.power_on_body = JSON.stringify({
@@ -88,8 +91,10 @@ function HttpStatusAccessory(log, config) {
     this.input_url = this.protocol + "://" + this.ip_address + ":" + this.portno + "/" + this.api_version + "/input/key";
 
     // AMBILIGHT
+    this.ambilight_brightness = MenuItem(this, this.log, 2131230842, false);
+
     this.ambilight_status_url = this.protocol + "://" + this.ip_address + ":" + this.portno + "/" + this.api_version + "/menuitems/settings/current";
-	this.ambilight_brightness_body = JSON.stringify({"nodes":[{"nodeid":200}]});
+	this.ambilight_brightness_body = JSON.stringify({"nodes":[{"nodeid":2131230769}]});
 	this.ambilight_mode_body = JSON.stringify({"nodes":[{"nodeid":100}]});
 	
     this.ambilight_config_url = this.protocol + "://" + this.ip_address + ":" + this.portno + "/" + this.api_version + "/menuitems/settings/update";
@@ -245,6 +250,10 @@ HttpStatusAccessory.prototype = {
                 callback(error, response, body)
         	}
         );
+    },
+
+    pathRequest: function(path, body, method, callback) {
+        this.httpRequest(this.base_url + path, body, method, true, callback);
     },
 
     wolRequest: function(url, callback) {
@@ -922,8 +931,73 @@ HttpStatusAccessory.prototype = {
         callback(); // success
     },
 
+    getActiveIdentifier: function(callback) {
+        callback(null, 0);
+    },
+
+    setActiveIdentifier: function(identifier, callback){
+        callback(null, identifier);
+    },
+
+    setRemoteKey: function(key, callback){
+        var value = "";
+        var that = this;
+        var onError = function(err) {
+          that.log(err);
+          if (!isNull(callback)) callback(null);
+        };
+        var onSucces = function(data) {
+          if (!isNull(callback)) callback(null);
+        };
+        that.log("Pressed key: ", key);
+    },
+
     getServices: function() {
         var that = this;
+
+        this.services = [];
+
+        this.tvService = new Service.Television(this.name);
+        this.tvService.setCharacteristic(Characteristic.ConfiguredName, this.name);
+        this.tvService
+          .setCharacteristic(
+            Characteristic.SleepDiscoveryMode,
+            Characteristic.SleepDiscoveryMode.ALWAYS_DISCOVERABLE
+          );
+        this.tvService
+          .getCharacteristic(Characteristic.Active)
+          .on('set', this.setPowerState.bind(this))
+          .on('get', this.getPowerState.bind(this));
+      
+        this.tvService.setCharacteristic(Characteristic.ActiveIdentifier, 0);
+        this.tvService
+          .getCharacteristic(Characteristic.ActiveIdentifier)
+          .on('set', this.setActiveIdentifier.bind(this))
+          .on('get', this.getActiveIdentifier.bind(this));
+      
+        this.tvService
+          .getCharacteristic(Characteristic.RemoteKey)
+          .on('set', this.setRemoteKey.bind(this));
+        this.services.push(this.tvService);
+      
+        /*this.speakerService = new Service.TelevisionSpeaker();
+        this.speakerService
+          .setCharacteristic(Characteristic.Active, Characteristic.Active.ACTIVE);
+        this.speakerService
+          .setCharacteristic(Characteristic.Name, this.soundoutput);
+        this.speakerService
+            .setCharacteristic(Characteristic.VolumeControlType, Characteristic.VolumeControlType.ABSOLUTE);
+        this.speakerService
+          .getCharacteristic(Characteristic.VolumeSelector) //increase/decrease volume
+          .on('set', this.setVolumeSelector.bind(this));
+        this.speakerService
+            .getCharacteristic(Characteristic.Mute)
+          .on('get', this.getMuted.bind(this))
+          .on('set', this.setMuted.bind(this));
+          this.speakerService.getCharacteristic(Characteristic.Volume)
+          .on('get', this.getVolume.bind(this))
+          .on('set', this.setVolume.bind(this));
+        this.services.push(this.speakerService);*/
 
         var informationService = new Service.AccessoryInformation();
         informationService
@@ -932,37 +1006,11 @@ HttpStatusAccessory.prototype = {
             .setCharacteristic(Characteristic.Model, "Year " + this.model_year);
 
         // POWER
-        this.switchService = new Service.Switch(this.name + " Power", '0a');
+        /*this.switchService = new Service.Switch(this.name + " Power", '0a');
         this.switchService
             .getCharacteristic(Characteristic.On)
             .on('get', this.getPowerState.bind(this))
-            .on('set', this.setPowerState.bind(this));
-
-        // Volume
-        this.volumeService = new Service.Lightbulb(this.name + " Volume", '0b');
-        this.volumeService
-            .getCharacteristic(Characteristic.On)
-            .on('get', this.getVolumeState.bind(this))
-            .on('set', this.setVolumeState.bind(this));
-
-        this.volumeService
-            .getCharacteristic(Characteristic.Brightness)
-            .on('get', this.getVolumeLevel.bind(this))
-            .on('set', this.setVolumeLevel.bind(this));
-
-        // Previous input
-        this.PreviousInputService = new Service.Switch(this.name + " Previous input", '0c');
-        this.PreviousInputService
-            .getCharacteristic(Characteristic.On)
-            .on('get', this.getPreviousInput.bind(this))
-            .on('set', this.setPreviousInput.bind(this));
-
-        // Next input
-        this.NextInputService = new Service.Switch(this.name + " Next input", '0d');
-        this.NextInputService
-            .getCharacteristic(Characteristic.On)
-            .on('get', this.getNextInput.bind(this))
-            .on('set', this.setNextInput.bind(this));
+            .on('set', this.setPowerState.bind(this));*/
 
         if (this.has_ambilight) {
             // AMBILIGHT
@@ -974,12 +1022,12 @@ HttpStatusAccessory.prototype = {
 
         	this.ambilightService
             	.getCharacteristic(Characteristic.Brightness)
-            	.on('get', this.getAmbilightBrightness.bind(this))
-            	.on('set', this.setAmbilightBrightness.bind(this));
+            	.on('get', this.ambilight_brightness.getValue.bind(this))
+            	.on('set', this.ambilight_brightness.setValue.bind(this));
 
-            return [informationService, this.switchService, this.volumeService, this.NextInputService, this.PreviousInputService, this.ambilightService];
+            return this.services;
         } else {
-            return [informationService, this.switchService, this.NextInputService, this.PreviousInputService, this.volumeService];
+            return this.services;
         }
     }
 };
