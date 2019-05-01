@@ -951,6 +951,7 @@ HttpStatusAccessory.prototype = {
           if (!isNull(callback)) callback(null);
         };
         that.log("Pressed key: ", key);
+        callback(null);
     },
 
     getBrightness: function(callback) {
