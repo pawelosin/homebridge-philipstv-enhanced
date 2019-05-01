@@ -226,7 +226,7 @@ HttpStatusAccessory.prototype = {
             body: body,
             method: method,
             rejectUnauthorized: false,
-            timeout: 1000
+            timeout: 3000
         };
 
         // EXTRA CONNECTION SETTINGS FOR API V6 (HTTP DIGEST)
