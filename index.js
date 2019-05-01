@@ -940,6 +940,13 @@ HttpStatusAccessory.prototype = {
         callback(null, identifier);
     },
 
+    sendKey: function(key, callback) {
+        body = JSON.stringify({"key": "Source"});
+        this.pathRequest("/input/key", body, "POST", function(error, response, responseBody) {
+            callback(null);
+        });
+    },
+
     setRemoteKey: function(key, callback){
         var value = "";
         var that = this;
@@ -951,7 +958,49 @@ HttpStatusAccessory.prototype = {
           if (!isNull(callback)) callback(null);
         };
         that.log("Pressed key: ", key);
-        callback(null);
+
+        switch(key){
+            case Characteristic.RemoteKey.REWIND:
+            value="Rewind";
+            break;
+            case Characteristic.RemoteKey.FAST_FORWARD:
+            value="FastForward";
+            break;
+            case Characteristic.RemoteKey.NEXT_TRACK:
+            value="Next";
+            break;
+            case Characteristic.RemoteKey.PREVIOUS_TRACK:
+            value="Previous";
+            break;
+            case Characteristic.RemoteKey.ARROW_UP:
+            value="CursorUp";
+            break;
+            case Characteristic.RemoteKey.ARROW_DOWN:
+            value="CursorDown"
+            break;
+            case Characteristic.RemoteKey.ARROW_LEFT:
+            value="CursorLeft";
+            break;
+            case Characteristic.RemoteKey.ARROW_RIGHT:
+            value="CursorRight";
+            break;
+            case Characteristic.RemoteKey.SELECT:
+            value="Confirm";
+            break;
+            case Characteristic.RemoteKey.BACK:
+            value="Back";
+            break;
+            case Characteristic.RemoteKey.EXIT:
+            value="Home";
+            break;
+            case Characteristic.RemoteKey.PLAY_PAUSE:
+            value="PlayPause";
+            break;
+            case Characteristic.RemoteKey.INFORMATION:
+            value="Info";
+            break;
+          }
+        this.sendKey(value, onSucces);
     },
 
     getBrightness: function(callback) {
