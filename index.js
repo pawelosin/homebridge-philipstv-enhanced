@@ -92,7 +92,7 @@ function HttpStatusAccessory(log, config) {
 
     // AMBILIGHT
     this.ambilight_brightness = MenuItem(this, this.log, 2131230842, false);
-    this.log("Setting up brightness: ", this.ambilight_brightness);
+    //this.log("Setting up brightness: ", this.ambilight_brightness);
 
     this.ambilight_status_url = this.protocol + "://" + this.ip_address + ":" + this.portno + "/" + this.api_version + "/menuitems/settings/current";
 	this.ambilight_brightness_body = JSON.stringify({"nodes":[{"nodeid":2131230769}]});
@@ -954,6 +954,7 @@ HttpStatusAccessory.prototype = {
     },
 
     getBrightness: function(callback) {
+        this.log("Getting brightness: ", this.ambilight_brightness);
         this.ambilight_brightness.getValue(callback, "");
     },
 
