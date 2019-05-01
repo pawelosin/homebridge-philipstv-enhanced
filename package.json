@@ -1,6 +1,6 @@
 {
   "name": "homebridge-philipstv-enhanced-x",
-  "version": "0.1.16",
+  "version": "0.1.17",
   "description": "Homebridge module for the Philips TV (with JointSpace enabled) and ready for 2018 models",
   "main": "index.js",
   "scripts": {
