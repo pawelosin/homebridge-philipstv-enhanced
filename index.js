@@ -952,10 +952,10 @@ HttpStatusAccessory.prototype = {
         var that = this;
         var onError = function(err) {
           that.log(err);
-          if (!isNull(callback)) callback();
+          if (callback) callback();
         };
         var onSucces = function(data) {
-          if (!isNull(callback)) callback();
+          if (callback) callback();
         };
         that.log("Pressed key: ", key);
 
