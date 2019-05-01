@@ -1,5 +1,3 @@
-module.exports = MenuItem;
-
 function MenuItem(accessory, log, nodeid, is_polling) {
     this.accessory = accessory;
     this.log = log;
@@ -31,3 +29,5 @@ MenuItem.prototype = {
         //TODO
     }
 }
+
+module.exports = MenuItem;
