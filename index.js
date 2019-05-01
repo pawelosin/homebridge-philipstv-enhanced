@@ -962,6 +962,14 @@ HttpStatusAccessory.prototype = {
         this.ambilight_brightness.setValue(callback, "");
     },
 
+    getBrightnessState: function(callback) {
+        callback(null, 1);
+    },
+
+    setBrightnessState: function(value, callback) {
+        callback(null, value);
+    },
+
     getServices: function() {
         var that = this;
 
@@ -1025,10 +1033,10 @@ HttpStatusAccessory.prototype = {
         if (this.has_ambilight) {
             // AMBILIGHT
             this.ambilightService = new Service.Lightbulb(this.name + " Brightness", '0e');
-            this.ambilightService
+            /*this.ambilightService
                 .getCharacteristic(Characteristic.On)
-                .on('get', this.getAmbilightState.bind(this))
-                .on('set', this.setAmbilightState.bind(this));
+                .on('get', this.getBrightnessState.bind(this))
+                .on('set', this.setBrightnessState.bind(this));*/
 
         	this.ambilightService
             	.getCharacteristic(Characteristic.Brightness)
