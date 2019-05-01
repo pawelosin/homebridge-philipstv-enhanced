@@ -953,6 +953,14 @@ HttpStatusAccessory.prototype = {
         that.log("Pressed key: ", key);
     },
 
+    getBrightness: function(callback) {
+        this.ambilight_brightness.getValue(callback, "");
+    },
+
+    setBrightness: function(value, callback) {
+        this.ambilight_brightness.setValue(callback, "");
+    },
+
     getServices: function() {
         var that = this;
 
@@ -1015,7 +1023,7 @@ HttpStatusAccessory.prototype = {
 
         if (this.has_ambilight) {
             // AMBILIGHT
-            this.ambilightService = new Service.Lightbulb(this.name + " Ambilight", '0e');
+            this.ambilightService = new Service.Lightbulb(this.name + " Brightness", '0e');
             this.ambilightService
                 .getCharacteristic(Characteristic.On)
                 .on('get', this.getAmbilightState.bind(this))
@@ -1023,8 +1031,8 @@ HttpStatusAccessory.prototype = {
 
         	this.ambilightService
             	.getCharacteristic(Characteristic.Brightness)
-            	.on('get', this.ambilight_brightness.getValue.bind(this))
-                .on('set', this.ambilight_brightness.setValue.bind(this));
+            	.on('get', this.getBrightness.bind(this))
+                .on('set', this.setBrightness.bind(this));
                 
             this.services.push(this.ambilightService);
 
