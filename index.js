@@ -91,7 +91,7 @@ function HttpStatusAccessory(log, config) {
     this.input_url = this.protocol + "://" + this.ip_address + ":" + this.portno + "/" + this.api_version + "/input/key";
 
     // AMBILIGHT
-    this.ambilight_brightness = MenuItem(this, this.log, 2131230842, false);
+    this.ambilight_brightness = new MenuItem(this, this.log, 2131230842, false);
     //this.log("Setting up brightness: ", this.ambilight_brightness);
 
     this.ambilight_status_url = this.protocol + "://" + this.ip_address + ":" + this.portno + "/" + this.api_version + "/menuitems/settings/current";
