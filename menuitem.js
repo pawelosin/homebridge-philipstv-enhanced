@@ -13,6 +13,11 @@ MenuItem.prototype = {
             callback(null, this.state);
             return;
         }
+
+        if (this.accessory.state_power == 0) {
+            callback(null, this.state);
+            return;
+        }
         var that = this;
         this.accessory.pathRequest("/menuitems/settings/current", JSON.stringify({"nodes":[{"nodeid":this.nodeid}]}), "POST", function(error, response, responseBody) {
             that.log("data recvd: ", responseBody);
