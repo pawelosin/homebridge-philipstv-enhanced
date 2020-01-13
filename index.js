@@ -994,7 +994,7 @@ HttpStatusAccessory.prototype = {
             value="Home";
             break;
             case Characteristic.RemoteKey.PLAY_PAUSE:
-            value="PlayPause";
+            value="Home";
             break;
             case Characteristic.RemoteKey.INFORMATION:
             value="Info";
@@ -1034,7 +1034,7 @@ HttpStatusAccessory.prototype = {
           );
         this.tvService
           .getCharacteristic(Characteristic.Active)
-          .on('set', this.setBrightnessState.bind(this))
+          .on('set', this.setPowerState.bind(this))
           .on('get', this.getPowerState.bind(this));
       
         this.tvService.setCharacteristic(Characteristic.ActiveIdentifier, 0);
